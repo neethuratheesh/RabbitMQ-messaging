@@ -72,7 +72,7 @@ public class Receiver {
 	   file.mkdir();
 	   BufferedWriter bw;
 	try {
-		bw = new BufferedWriter(new FileWriter(path+eachStore+"\\"+catalina.getAwardNumber()+".txt"));
+		bw = new BufferedWriter(new FileWriter(path+eachStore+"\\"+catalina.getAwardNumber()+".xml"));
 		bw.write(catalina.getMessage());
 		
 		   bw.flush();
