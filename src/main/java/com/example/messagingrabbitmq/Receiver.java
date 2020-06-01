@@ -20,13 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.messagingrabbitmq.model.Catalina;
+import com.example.messagingrabbitmq.model.Award;
 
 @Component
 public class Receiver {
 	
 	@Autowired
-	private Catalina catalina;
+	private Award catalina;
 	
      @Value("${path.file.write}")
      private String path;
@@ -61,19 +61,19 @@ public class Receiver {
 	}*/
 	
 	@RabbitListener(queues = MessagingRabbitmqApplication.queueName)
-    public void receiveMessage(final Catalina catalina)  {
-   logger.info("Received message as specific class: {}" +catalina.toString());
-   logger.debug("Award Number : " +catalina.getAwardNumber());
-   List<String> stores = catalina.getStores();
-   String fileName = catalina.getAwardNumber();
+    public void receiveMessage(final Award award)  {
+   logger.info("Received message as specific class: {}" +award.toString());
+   logger.debug("Award Number : " +award.getAwardNumber());
+   List<String> stores = award.getStores();
+   String fileName = award.getAwardNumber();
    for (String eachStore:stores) {
 	   File file = new File(path+eachStore);
 	   if (!file.exists()) {
 	   file.mkdir();
 	   BufferedWriter bw;
 	try {
-		bw = new BufferedWriter(new FileWriter(path+eachStore+"\\"+catalina.getAwardNumber()+".xml"));
-		bw.write(catalina.getMessage());
+		bw = new BufferedWriter(new FileWriter(path+eachStore+"\\"+award.getAwardNumber()+".xml"));
+		bw.write(award.getMessage());
 		
 		   bw.flush();
 		   bw.close();
