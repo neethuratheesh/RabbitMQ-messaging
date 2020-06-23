@@ -12,13 +12,17 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootApplication
+//@ComponentScan("com.example.messagingrabbitmq")
 public class MessagingRabbitmqApplication {
 	
 	static final String topicExchangeName = "spring-boot-exchange";
 
-	  static final String queueName = "spring-boot";
+	  static final String queueName = "spring-boot1";
 
 	  @Bean
 	  Queue queue() {
@@ -32,7 +36,7 @@ public class MessagingRabbitmqApplication {
 
 	  @Bean
 	  Binding binding(Queue queue, TopicExchange exchange) {
-	    return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+	    return BindingBuilder.bind(queue).to(exchange).with("award");
 	  }
 	  
 	  @Bean
@@ -65,6 +69,16 @@ public class MessagingRabbitmqApplication {
 	  MessageListenerAdapter listenerAdapter(Receiver receiver) {
 	    return new MessageListenerAdapter(receiver, "receiveMessage");
 	  }*/
+	  
+	  @Bean
+	    public TaskExecutor threadPoolTaskExecutor() {
+	        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+	        executor.setCorePoolSize(4);
+	        executor.setMaxPoolSize(4);
+	        executor.setThreadNamePrefix("default_task_executor_thread");
+	        executor.initialize();
+	        return executor;
+	    }
 	
 
 	public static void main(String[] args) {

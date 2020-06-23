@@ -18,6 +18,8 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.example.messagingrabbitmq.model.Award;
@@ -27,6 +29,15 @@ public class Receiver {
 	
 	@Autowired
 	private Award catalina;
+	
+	@Autowired
+	private TaskExecutor taskExecutor;
+	
+	@Autowired
+	private MyThread myThread;
+	
+	@Autowired
+	private ApplicationContext applicationContext;
 	
      @Value("${path.file.write}")
      private String path;
@@ -59,6 +70,10 @@ public class Receiver {
 		
 		latch.countDown();
 	}*/
+	      	
+        
+            
+        
 	
 	@RabbitListener(queues = MessagingRabbitmqApplication.queueName)
     public void receiveMessage(final Award award)  {
@@ -66,7 +81,9 @@ public class Receiver {
    logger.debug("Award Number : " +award.getAwardNumber());
    List<String> stores = award.getStores();
    String fileName = award.getAwardNumber();
-   for (String eachStore:stores) {
+   MyThread myThread = applicationContext.getBean(MyThread.class,stores,fileName, award.getMessage());
+   taskExecutor.execute(myThread);
+  /* for (String eachStore:stores) {
 	   File file = new File(path+eachStore);
 	   if (!file.exists()) {
 	   file.mkdir();
@@ -88,7 +105,7 @@ public class Receiver {
    
    
        // Logger.info("Received message as specific class: {}", catalina.toString());
-    }
+    }*/
 	
 	
 	
@@ -97,3 +114,4 @@ public class Receiver {
 
 }
 }
+
