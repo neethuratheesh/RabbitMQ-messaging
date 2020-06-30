@@ -21,7 +21,7 @@ import com.example.messagingrabbitmq.model.Award;
 public class MyThread implements Runnable {
 	private static final Logger LOGGER = Logger.getLogger(MyThread.class);
 	
-	private List<String> stores;
+	private String eachStore;
 	
 	private String fileName;
 
@@ -36,8 +36,8 @@ public class MyThread implements Runnable {
 	public MyThread() {
 		
 	}
-	public MyThread(List<String> stores,String fileName,String message) {
-		this.stores=stores;
+	public MyThread(String eachStore,String fileName,String message) {
+		this.eachStore=eachStore;
 		this.fileName=fileName;
 		this.message=message;
 		
@@ -45,8 +45,9 @@ public class MyThread implements Runnable {
 	    
 	    @Override
 	    public void run() {
-	    	 for (String eachStore:stores) {
+	    	 
 	    		   File file = new File(path+eachStore);
+	    		   LOGGER.debug("Checking directory " +Thread.currentThread().getName());
 	    		   if (!file.exists()) {
 	    		   file.mkdir();
 	    		   BufferedWriter bw;
@@ -56,6 +57,7 @@ public class MyThread implements Runnable {
 	    			//bw.write(catalina.getMessage());
 	    			bw.write(message);
 	    			
+	    			
 	    			   bw.flush();
 	    			   bw.close();
 	    		} catch (IOException e) {
@@ -64,18 +66,18 @@ public class MyThread implements Runnable {
 	    		}
 	    		
 	        
-	    }
+	    
 	}
 	    }
 
-		public List<String> getStores() {
-			return stores;
-		}
+		
 
-		public void setStores(List<String> stores) {
-			this.stores = stores;
+		public String getEachStore() {
+			return eachStore;
 		}
-
+		public void setEachStore(String eachStore) {
+			this.eachStore = eachStore;
+		}
 		public String getFileName() {
 			return fileName;
 		}

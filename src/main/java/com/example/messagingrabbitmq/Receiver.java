@@ -81,8 +81,12 @@ public class Receiver {
    logger.debug("Award Number : " +award.getAwardNumber());
    List<String> stores = award.getStores();
    String fileName = award.getAwardNumber();
-   MyThread myThread = applicationContext.getBean(MyThread.class,stores,fileName, award.getMessage());
-   taskExecutor.execute(myThread);
+   for (String eachStore:stores) {
+	  MyThread myThread = applicationContext.getBean(MyThread.class,eachStore,fileName, award.getMessage());
+	  taskExecutor.execute(myThread);
+   }
+  // MyThread myThread = applicationContext.getBean(MyThread.class,stores,fileName, award.getMessage());
+  // taskExecutor.execute(myThread);
   /* for (String eachStore:stores) {
 	   File file = new File(path+eachStore);
 	   if (!file.exists()) {
